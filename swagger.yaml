@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: API Actividad Joyería DB
+  description: API para la gestión del inventario de joyas y clientes.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor de desarrollo
+
+paths:
+  /joyas:
+    get:
+      summary: Obtener todas las joyas
+      tags:
+        - Joyas
+      responses:
+        '200':
+          description: Lista de joyas obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Joya'
+    post:
+      summary: Crear una nueva joya
+      tags:
+        - Joyas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoyaInput'
+      responses:
+        '201':
+          description: Joya creada exitosamente
+        '400':
+          description: Error de validación de los datos
+
+  /joyas/{id}:
+    get:
+      summary: Obtener una joya por ID
+      tags:
+        - Joyas
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: El ID de la joya
+      responses:
+        '200':
+          description: Detalles de la joya
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Joya'
+        '404':
+          description: Joya no encontrada
+    put:
+      summary: Actualizar una joya existente
+      tags:
+        - Joyas
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoyaInput'
+      responses:
+        '200':
+          description: Joya actualizada
+        '404':
+          description: Joya no encontrada
+    delete:
+      summary: Eliminar una joya
+      tags:
+        - Joyas
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Joya eliminada exitosamente
+        '404':
+          description: Joya no encontrada
+
+components:
+  schemas:
+    Joya:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 60d21b4667d0d8992e610c85
+        nombre:
+          type: string
+          example: Anillo de Compromiso
+        material:
+          type: string
+          enum: [Oro, Plata, Diamante]
+          example: Oro
+        precio:
+          type: number
+          example: 1200.50
+        stock:
+          type: integer
+          example: 5
+    JoyaInput:
+      type: object
+      required:
+        - nombre
+        - material
+        - precio
+      properties:
+        nombre:
+          type: string
+          example: Collar de Perlas
+        material:
+          type: string
+          enum: [Oro, Plata, Diamante]
+          example: Plata
+        precio:
+          type: number
+          example: 250
+        stock:
+          type: integer
+          example: 10
